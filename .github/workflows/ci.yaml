@@ -25,7 +25,7 @@ jobs:
 
         strategy:
             matrix:
-                operating-system: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+                operating-system: ['ubuntu-latest']
                 php-version: ['7.2']
 
         steps:
@@ -57,18 +57,11 @@ jobs:
             - name: "Require symfony/flex"
               run: composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-main
 
-            - if: matrix.php-version != '8.0'
-              run: composer update
+            - name: "Composer install"
+              run: composer install
 
-            - if: matrix.php-version == '8.0'
-              run: composer update --ignore-platform-req=php
-
-            - if: matrix.php-version != '8.0' 
-              name: "Install PHPUnit"
+            - name: "Install PHPUnit"
               run: vendor/bin/simple-phpunit install
-
-            - name: "PHPUnit version"
-              run: vendor/bin/simple-phpunit --version
 
             - name: "Run tests"
               run: vendor/bin/simple-phpunit ${{ env.PHPUNIT_FLAGS }}
